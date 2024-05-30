@@ -1,0 +1,83 @@
+#include<stdio.h>
+
+// 打印棋盘
+void print(char board[3][3]){
+      int i,j;
+      for(i=0;i<3;i++){ // 遍历每一行
+           for(j=0;j<3;j++){ // 遍历每一列
+               printf("%c",board[i][j]); // 打印出棋盘当前位置的棋子
+           }
+           printf("\n"); // 打印完一行后换行
+      }
+}
+
+// 检查是否有玩家胜利
+int check(char board[3][3],char place){
+      // 检查每一行
+      for (int i = 0; i < 3; i++) {  
+        if (board[i][0] == place && board[i][1] == place && board[i][2] == place) {  
+            return 1;  // 如果一行的三个位置都是同一玩家的棋子，那么这个玩家胜利
+        }  
+      }
+      // 检查每一列
+      for (int j = 0; j < 3; j++) {  
+        if (board[0][j] == place && board[1][j] == place && board[2][j] == place) {  
+            return 1;  // 如果一列的三个位置都是同一玩家的棋子，那么这个玩家胜利
+        }  
+      }
+      // 检查对角线
+      if ((board[0][0] == place && board[1][1] == place && board[2][2] == place) || 
+          (board[0][2] == place && board[1][1] == place && board[2][0] == place)) {  
+           return 1;  // 如果对角线的三个位置都是同一玩家的棋子，那么这个玩家胜利
+      }
+      return 0; // 若无玩家胜利，返回0
+}
+
+// 检查游戏是否结束
+int over(char board[3][3]){
+     int i,j;
+     for(i=0;i<3;i++){
+           for(j=0;j<3;j++){
+                if(board[i][j]==' '){ // 如果棋盘上还有空位，说明游戏还未结束
+                      return 0;
+                }
+           }
+     }
+     return 1; // 如果棋盘上没有空位，说明游戏结束
+}
+
+int main(){
+     char board[3][3]={{' ',' ',' '},{' ',' ',' '},{' ',' ',' '}}; // 初始化一个空的棋盘
+     char place='X'; // 初始的玩家是X
+     while(1){ // 游戏主循环
+          print(board); // 打印棋盘
+          int i,j;
+          printf("player %c (row col)",place); // 提示当前玩家输入行列
+          scanf("%d %d",&i,&j); // 读取玩家输入的行列
+          // 检查输入的位置是否合法
+          if(board[i-1][j-1]!=' '||i<1||i>3||j<1||j>3){
+              printf("try again\n"); // 如果不合法，提示玩家重新输入
+              continue;
+          }
+          board[i-1][j-1]=place; // 在棋盘上放置棋子
+          // 检查是否有玩家胜利
+          if(check(board,place)){
+              print(board); // 打印棋盘
+              printf("player %c win the game\n",place); // 声明胜利玩家
+              break; // 结束游戏
+          }
+          // 切换玩家
+          if(place=='X'){
+               place='O';
+          }
+          else{
+              place='X';
+          }
+          // 检查游戏是否结束
+          if(over(board)){
+                print(board); // 打印棋盘
+                printf("over\n"); // 声明游戏结束
+                break; // 结束游戏
+          }
+     }
+}
